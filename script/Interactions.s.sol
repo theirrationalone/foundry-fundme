@@ -3,6 +3,8 @@
 pragma solidity ^0.8.18;
 
 import {Script} from "forge-std/Script.sol";
+import {DevOpsTools} from "foundry-devops/src/DevOpsTools.sol";
+
 import {FundMe} from "../src/FundMe.sol";
 import {HelperConfig} from "./HelperConfig.s.sol";
 
@@ -13,11 +15,12 @@ contract FundFundMe is Script {
 
     function run() external {
         HelperConfig config = new HelperConfig();
-        (address priceFeedAddress, uint256 privateKey) = config.activeNetworkConfig();
+        (, uint256 privateKey) = config.activeNetworkConfig();
+
+        address recentFundMe = DevOpsTools.get_most_recent_deployment("FundMe", block.chainid);
 
         vm.startBroadcast(privateKey);
-        FundMe fundMe = new FundMe(priceFeedAddress);
-        fundFundMe(address(fundMe), 0.003 ether);
+        fundFundMe(recentFundMe, 0.003 ether);
         vm.stopBroadcast();
     }
 }
@@ -29,12 +32,12 @@ contract WithdrawFundMe is Script {
 
     function run() external {
         HelperConfig config = new HelperConfig();
-        (address priceFeedAddress, uint256 privateKey) = config.activeNetworkConfig();
+        (, uint256 privateKey) = config.activeNetworkConfig();
+
+        address recentFundMe = DevOpsTools.get_most_recent_deployment("FundMe", block.chainid);
 
         vm.startBroadcast(privateKey);
-        FundMe fundMe = new FundMe(priceFeedAddress);
-        fundMe.fund{value: 1 ether}();
-        withdrawFundMe(address(fundMe));
+        withdrawFundMe(recentFundMe);
         vm.stopBroadcast();
     }
 }
