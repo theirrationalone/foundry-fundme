@@ -11,10 +11,10 @@ contract FundMe {
 
     error FundMe__NotEnoughPaid();
     error FundMe__NotOwner();
-    error FundMe__NothingToWitdraw();
+    error FundMe__NothingToWithdraw();
     error FundMe__WithdrawalFailed();
 
-    uint256 private constant MINIMUM_USD = 5 * 1e8;
+    uint256 private constant MINIMUM_USD = 5 * 1e18;
     address[] private s_funders;
     mapping(address funder => uint256 fund) private s_fundedFunds;
 
@@ -39,12 +39,20 @@ contract FundMe {
         _;
     }
 
+    receive() external payable {
+        fund();
+    }
+
+    fallback() external payable {
+        fund();
+    }
+
     constructor(address _priceFeedAddress) {
         i_priceFeed = AggregatorV3Interface(_priceFeedAddress);
         i_owner = msg.sender;
     }
 
-    function fund() external payable validPayment(msg.value) {
+    function fund() public payable validPayment(msg.value) {
         s_funders.push(msg.sender);
         s_fundedFunds[msg.sender] = msg.value;
 
@@ -53,7 +61,7 @@ contract FundMe {
 
     function withdraw() public onlyOwner(msg.sender) {
         if (address(this).balance <= 0) {
-            revert FundMe__NothingToWitdraw();
+            revert FundMe__NothingToWithdraw();
         }
 
         address[] memory funders = s_funders;
@@ -74,5 +82,33 @@ contract FundMe {
         }
 
         emit OwnerWithdrawn(msg.sender, netBalance);
+    }
+
+    function getPriceFeed() external view returns (address) {
+        return address(i_priceFeed);
+    }
+
+    function getMinimumUSD() external pure returns (uint256) {
+        return MINIMUM_USD;
+    }
+
+    function getFundersLength() external view returns (uint256) {
+        return s_funders.length;
+    }
+
+    function getFunder(uint256 _funderIndex) external view returns (address) {
+        return s_funders[_funderIndex];
+    }
+
+    function getFunderFundedAmount(address _funderAddress) external view returns (uint256) {
+        return s_fundedFunds[_funderAddress];
+    }
+
+    function getOwner() public view returns (address) {
+        return i_owner;
+    }
+
+    function getBalance() public view returns (uint256) {
+        return address(this).balance;
     }
 }
