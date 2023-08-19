@@ -77,7 +77,7 @@ contract FundMeTest is Test {
 
     function testUserCanFund() public {
         uint256 expectedFundersLength = 1;
-        uint256 expectedFundedFunds = 0.003 ether;
+        uint256 expectedFundedFunds = 0.004 ether;
 
         vm.startPrank(USER);
         s_fundMe.fund{value: expectedFundedFunds}();
@@ -104,7 +104,7 @@ contract FundMeTest is Test {
     }
 
     function testWillEmitAnEventOnSuccessfulFunding() public {
-        uint256 fundAmount = 0.003 ether;
+        uint256 fundAmount = 0.004 ether;
 
         vm.startPrank(USER);
         vm.expectEmit(true, true, false, false, address(s_fundMe));
@@ -122,7 +122,7 @@ contract FundMeTest is Test {
     }
 
     function testlowLevelReceiveWillDivertTheCalltoFundWithoutData() public {
-        uint256 fundAmount = 0.003 ether;
+        uint256 fundAmount = 0.004 ether;
         uint256 expectedFundersLength = 1;
 
         vm.startPrank(USER);
@@ -142,7 +142,7 @@ contract FundMeTest is Test {
     }
 
     function testlowLevelFallbackWillDivertTheCalltoFundWithData() public {
-        uint256 fundAmount = 0.003 ether;
+        uint256 fundAmount = 0.004 ether;
         uint256 expectedFundersLength = 1;
 
         vm.startPrank(USER);
@@ -160,7 +160,7 @@ contract FundMeTest is Test {
     }
 
     modifier funded() {
-        uint256 expectedFundedFunds = 0.003 ether;
+        uint256 expectedFundedFunds = 0.004 ether;
 
         vm.startPrank(USER);
         s_fundMe.fund{value: expectedFundedFunds}();
@@ -245,5 +245,11 @@ contract FundMeTest is Test {
         assertEq(endingFundMeBalance, 0);
         assertEq(startingFundMeBalance, totalFunding);
         assertEq(endingOwnerBalance, (startingOwnerBalance + totalFunding));
+    }
+
+    function testGetPriceWorksCorrectly() public view {
+        uint256 latestPrice = s_fundMe.getLatestEthAmountUsdValue();
+
+        assert(latestPrice > 0);
     }
 }

@@ -111,4 +111,8 @@ contract FundMe {
     function getBalance() public view returns (uint256) {
         return address(this).balance;
     }
+
+    function getLatestEthAmountUsdValue() public view returns (uint256) {
+        return PriceConverter.getPrice(i_priceFeed);
+    }
 }
