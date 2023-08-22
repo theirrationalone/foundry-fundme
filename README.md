@@ -50,8 +50,6 @@ cd foundry-fundme
 forge build
 ```
 
-### Note: If `forge build` failed then use `forge install` after deleting all folders into `lib` folder.
-
 <br>
 
 # Usage
@@ -72,7 +70,7 @@ We talk about 4 test tiers in the video.
 4. Staging
 5. Invariants
 
-This repo we cover #1, #3, And #5. 
+In This repo I cover #1, #3, And #5. 
 
 
 ```
