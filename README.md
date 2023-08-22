@@ -81,7 +81,7 @@ or
 
 ```
 // Only run test functions matching the specified regex pattern.
-// Note: `testIntegratedInteractionBetweenFundAndWithdraw` is a test from unit test section, will get failed on local temporary anvil spun by foundry for us. Therefore, If you want to test this test then you will have to use `--broadcast` command in your scripts commands.
+// Note: `testIntegratedInteractionBetweenFundAndWithdraw` is a test from unit test section, will get failed on local temporary anvil spun by foundry for us. Therefore, If you want to test this test then you will have to use `--broadcast` and also will have to pass a `--rpc-url` (among these different networks i.e., local(anvil spun by us), sepolia, goerli, etc) commands in your scripts commands.
 
 "forge test -m testFunctionName" is deprecated. Please use 
 
